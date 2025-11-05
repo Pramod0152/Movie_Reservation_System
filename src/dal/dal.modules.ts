@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
+import { UserDataService } from './user.data.service';
 
 @Module({
-  imports: [],
-  providers: [],
-  exports: [],
+  providers: [UserDataService],
+  exports: [UserDataService],
 })
 export class DalModule {}
