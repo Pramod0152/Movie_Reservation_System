@@ -2,13 +2,14 @@ import { Column, Model, Table } from 'sequelize-typescript';
 
 @Table({
   tableName: 'users',
-  timestamps: false,
+  timestamps: true,
   createdAt: 'created_at',
   updatedAt: 'updated_at',
 })
-export class UserEntity extends Model {
+export class User extends Model {
   @Column({ primaryKey: true, autoIncrement: true })
-  
+  id: number;
+
   @Column
   username: string;
 
