@@ -1,7 +1,7 @@
 import { Module, Res } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { SequelizeConfigService } from './app/services/sequelize-congif.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from './app/logger/logger.modules';
 import { DalModule } from './dal/dal.modules';
 import { ServiceModules } from './bll/service.modules';
@@ -23,5 +23,6 @@ import { ResponseModule } from './common/response/response.modules';
     ServiceModules,
     ResponseModule,
   ],
+  providers: [ConfigService]
 })
 export class AppModule {}

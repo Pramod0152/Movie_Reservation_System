@@ -17,4 +17,12 @@ export class UserDataService extends BaseDataService {
       password: item.password,
     });
   }
+
+  async getUserByEmail(email: string) {
+    return await this.model.findOne({ where: { email: email } });
+  }
+
+  async getUserById(id: number) {
+    return await this.model.findOne({ where: { id: id } });
+  }
 }
