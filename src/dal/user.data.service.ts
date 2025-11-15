@@ -15,6 +15,7 @@ export class UserDataService extends BaseDataService {
       username: item.username,
       email: item.email,
       password: item.password,
+      tags: item.tags ?? null,
     });
   }
 
@@ -24,5 +25,9 @@ export class UserDataService extends BaseDataService {
 
   async getUserById(id: number) {
     return await this.model.findOne({ where: { id: id } });
+  }
+
+  async getAllUsers() {
+    return await this.model.findAll();
   }
 }

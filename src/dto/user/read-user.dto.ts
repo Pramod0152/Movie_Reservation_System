@@ -9,4 +9,10 @@ export class ReadUserDto {
 
   @ApiProperty()
   email: string;
+
+  @ApiProperty()
+  tags: string[];
+
+  @ApiProperty()
+  created_at: Date;
 }

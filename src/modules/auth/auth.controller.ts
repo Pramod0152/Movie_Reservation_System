@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Request, Param, ParseIntPipe } from '@nestjs/common';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../../dto/user/create-user.dto';
@@ -68,7 +68,7 @@ export class AuthController {
     return this.responseHandler.handleResponse(result);
   }
 
-  @Get('/me')
+  @Get('/')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -81,9 +81,50 @@ export class AuthController {
     type: GenericResponseDto,
     description: 'Unauthorized!. ',
   })
+  @Public()
   @ApiGenericResponse({ type: () => ReadUserDto })
-  async getMyProfile(@Request() req: any) {
-    const result = await this.authService.getMyProfile(req.user.id);
+  async allUsers() {
+    const result = await this.authService.getAllUsers();
+    return this.responseHandler.handleResponse(result);
+  }
+
+  @Get('/:id')
+  @ApiNotFoundResponse({
+    type: GenericResponseDto,
+    description: 'Record Not Found!.',
+  })
+  @ApiBadRequestResponse({
+    type: GenericResponseDto,
+    description: 'Form Validation Error!. ',
+  })
+  @ApiUnauthorizedResponse({
+    type: GenericResponseDto,
+    description: 'Unauthorized!. ',
+  })
+  @Public()
+  @ApiGenericResponse({ type: () => ReadUserDto })
+  async getMyProfile(@Request() req: any, @Param('id', ParseIntPipe) id: number) {
+    const result = await this.authService.getMyProfile(id);
+    return this.responseHandler.handleResponse(result);
+  }
+
+  @Get('/another-me')
+  @ApiNotFoundResponse({
+    type: GenericResponseDto,
+    description: 'Record Not Found!.',
+  })
+  @ApiBadRequestResponse({
+    type: GenericResponseDto,
+    description: 'Form Validation Error!. ',
+  })
+  @ApiUnauthorizedResponse({
+    type: GenericResponseDto,
+    description: 'Unauthorized!. ',
+  })
+  @Public()
+  @ApiGenericResponse({ type: () => ReadUserDto })
+  async anotherMe(@Request() req: any) {
+    const result = await this.authService.getAnotherMe();
     return this.responseHandler.handleResponse(result);
   }
 }

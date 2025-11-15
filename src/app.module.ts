@@ -7,6 +7,7 @@ import { DalModule } from './dal/dal.modules';
 import { ServiceModules } from './bll/service.modules';
 import { MainModules } from './modules/main.modules';
 import { ResponseModule } from './common/response/response.modules';
+import { ExceptionsFilterService } from './app/services/exception-filter.service';
 
 @Module({
   imports: [
@@ -23,6 +24,12 @@ import { ResponseModule } from './common/response/response.modules';
     ServiceModules,
     ResponseModule,
   ],
-  providers: [ConfigService]
+  providers: [
+    ConfigService,
+    {
+      provide: 'APP_FILTER',
+      useClass: ExceptionsFilterService,
+    },
+  ],
 })
 export class AppModule {}

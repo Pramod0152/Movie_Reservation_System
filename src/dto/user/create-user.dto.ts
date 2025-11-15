@@ -9,4 +9,7 @@ export class CreateUserDto {
 
     @ApiProperty()
     password: string;
+
+    @ApiProperty({ required: false, type: [String] })
+    tags?: string[];
 }

@@ -1,4 +1,4 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({
   tableName: 'users',
@@ -18,6 +18,9 @@ export class User extends Model {
 
   @Column
   password: string;
+
+  @Column({ type: DataType.JSON, allowNull: true })
+  tags: any;
 
   @Column
   created_at: Date;

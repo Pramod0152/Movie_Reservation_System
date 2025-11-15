@@ -11,7 +11,7 @@ export class ResponseHandlerService {
   ): Promise<GenericResponseDto<any>> {
     const result: GenericResponseDto<any> = {
       message: message || 'Success',
-      data: data || {},
+      data: data,
     };
     return result;
   }

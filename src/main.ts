@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { LoggerService } from './app/logger/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GenericResponseDto } from './dto/generic-response.dto';
+import { ExceptionsFilterService } from './app/services/exception-filter.service';
 
 async function bootstrap() {
   const app: NestApplication = await NestFactory.create(AppModule, {

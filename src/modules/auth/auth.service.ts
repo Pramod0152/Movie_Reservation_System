@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/user/create-user.dto';
 import { UserDataService } from '../../dal/user.data.service';
 import { ConfigService } from '@nestjs/config';
@@ -6,6 +6,9 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthVariables } from '../../app/lib/enum';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../../dto/user/login.dto';
+import { User } from '../../dal/entities/user.entity';
+import { ReadUserDto } from '../../dto/user/read-user.dto';
+import { MapperService } from '../../dal/profile';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +16,7 @@ export class AuthService {
     private readonly userDataService: UserDataService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly mapper: MapperService,
   ) {}
 
   async login(item: LoginDto) {
@@ -94,6 +98,23 @@ export class AuthService {
   }
 
   async getMyProfile(id: number) {
-    return await this.userDataService.getUserById(id);
+    const user = await this.userDataService.getUserById(id);
+    if(!user) {
+      throw new NotFoundException('User Not Found');
+    }
+    return await this.mapper.map(user, User, ReadUserDto);
+  }
+
+  async getAnotherMe() {
+    try {
+      throw new Error('Not implemented');
+    } catch (error) {
+      throw new BadRequestException();
+    }
+  }
+
+  async getAllUsers() {
+    const users = await this.userDataService.getAllUsers();
+    return this.mapper.mapArray(users, User, ReadUserDto);
   }
 }
