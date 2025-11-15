@@ -23,7 +23,7 @@ export class SequelizeConfigService implements SequelizeOptionsFactory {
 			autoLoadModels: true,
 			logging: false,
 			/** Never make it true it will crate tables according to the models */
-			synchronize: false,
+			synchronize: true,
 			define: {
 				timestamps: false,
 			},

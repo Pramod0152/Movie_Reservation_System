@@ -24,12 +24,15 @@ export class AuthService {
     if (!user) {
       throw new Error('User Not Found');
     }
+
     const isPasswordMatching = await bcrypt.compare(item.password, user.password);
     if (!isPasswordMatching) {
       throw new Error('Invalid Credentials');
     }
+
     const payload = { sub: user.id, username: user.username, email: user.email };
     const tokens = await this.getJwtTokens(payload);
+    
     return {
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token,
@@ -51,10 +54,12 @@ export class AuthService {
     const salt = AuthVariables.SaltOrRounds;
     const hashedPassword = await bcrypt.hash(item.password, salt);
     item.password = hashedPassword;
+
     const user = await this.userDataService.createUser(item);
 
     const payload = { sub: user.id, username: user.username, email: user.email };
     const tokens = await this.getJwtTokens(payload);
+
     return {
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token,
@@ -69,12 +74,6 @@ export class AuthService {
    * @returns
    */
   async getJwtTokens(payload: any): Promise<any> {
-    console.log(
-      `JWT ACCESS TOKEN SECRET: ${this.configService.get<string>('AUTH_JWT_ACCESS_TOKEN_SECRET_KEY')}`,
-    );
-    console.log(
-      `JWT REFRESH TOKEN SECRET: ${this.configService.get<string>('AUTH_JWT_REFRESH_TOKEN_SECRET_KEY')}`,
-    );
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('AUTH_JWT_ACCESS_TOKEN_SECRET_KEY'),
@@ -95,26 +94,5 @@ export class AuthService {
       access_token: at,
       refresh_token: rt,
     };
-  }
-
-  async getMyProfile(id: number) {
-    const user = await this.userDataService.getUserById(id);
-    if(!user) {
-      throw new NotFoundException('User Not Found');
-    }
-    return await this.mapper.map(user, User, ReadUserDto);
-  }
-
-  async getAnotherMe() {
-    try {
-      throw new Error('Not implemented');
-    } catch (error) {
-      throw new BadRequestException();
-    }
-  }
-
-  async getAllUsers() {
-    const users = await this.userDataService.getAllUsers();
-    return this.mapper.mapArray(users, User, ReadUserDto);
   }
 }

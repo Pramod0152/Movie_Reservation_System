@@ -15,4 +15,7 @@ export class ReadUserDto {
 
   @ApiProperty()
   created_at: Date;
+
+  @ApiProperty()
+  updated_at: Date;
 }

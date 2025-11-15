@@ -1,10 +1,7 @@
-import { ApiGenericResponse } from './app/decorator/generic-response.decorator';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LoggerService } from './app/logger/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { GenericResponseDto } from './dto/generic-response.dto';
-import { ExceptionsFilterService } from './app/services/exception-filter.service';
 
 async function bootstrap() {
   const app: NestApplication = await NestFactory.create(AppModule, {
@@ -15,7 +12,6 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Movie Reservation System API')
     .setDescription('The movie reservation API description')
-    .addTag('movies')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

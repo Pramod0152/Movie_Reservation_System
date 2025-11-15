@@ -23,11 +23,11 @@ export class UserDataService extends BaseDataService {
     return await this.model.findOne({ where: { email: email } });
   }
 
-  async getUserById(id: number) {
-    return await this.model.findOne({ where: { id: id } });
+  async getUsers() {
+    return await this.model.findAll();
   }
 
-  async getAllUsers() {
-    return await this.model.findAll();
+  async getUserProfile(userId: number) {
+    return await this.model.findByPk(userId);
   }
 }
