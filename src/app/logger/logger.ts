@@ -1,6 +1,8 @@
 import * as winston from 'winston';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class LoggerService {
@@ -37,23 +39,39 @@ export class LoggerService {
       winston.format.json(),
     );
 
+    const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.NOW_REGION;
+    const level = this.configService.get<string>('LOG_LEVEL') || 'debug';
+
+    const transports: winston.transport[] = [
+      new winston.transports.Console({
+        level,
+        format: consoleFormat,
+      }),
+    ];
+
+    if (!isServerless) {
+      const logDir = this.configService.get<string>('LOG_DIR') || 'logs';
+      const resolvedDir = path.resolve(logDir);
+      try {
+        if (!fs.existsSync(resolvedDir)) {
+          fs.mkdirSync(resolvedDir, { recursive: true });
+        }
+        transports.push(
+          new winston.transports.File({
+            filename: path.join(resolvedDir, 'error.log'),
+            level: 'error',
+            format: fileFormat,
+          }),
+        );
+      } catch (_e) {
+        // If file system is not writable, silently skip file transport
+      }
+    }
+
     this.logger = winston.createLogger({
       levels: this.levels,
-      level: 'debug',
-      // transports: include a Console transport so logs appear in terminal
-      transports: [
-        // Console transport for development / terminal output
-        new winston.transports.Console({
-          level: 'debug',
-          format: consoleFormat,
-        }),
-        // File transport for errors (keep existing behavior)
-        new winston.transports.File({
-          filename: 'logs/error.log',
-          level: 'error',
-          format: fileFormat,
-        }),
-      ],
+      level,
+      transports,
     });
   }
   emerg(message: string) {

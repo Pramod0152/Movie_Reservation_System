@@ -11,12 +11,12 @@ import { ExceptionsFilterService } from './app/services/exception-filter.service
 
 @Module({
   imports: [
-    SequelizeModule.forRootAsync({
-      useClass: SequelizeConfigService,
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    SequelizeModule.forRootAsync({
+      useClass: SequelizeConfigService,
     }),
     LoggerModule,
     DalModule,
