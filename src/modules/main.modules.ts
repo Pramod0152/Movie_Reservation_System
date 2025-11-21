@@ -7,6 +7,13 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { UserModule } from './user/user.modules';
+import { TheaterModule } from './theater/theater.modules';
+import { ScreenModule } from './screen/screen.modules';
+import { MovieModule } from './movie/movie.modules';
+import { SlotModule } from './slot/slot.modules';
+import { SeatModule } from './seat/seat.modules';
+import { ReservationModule } from './reservation/reservation.modules';
+import { RolesGuard } from './auth/guard/roles.guard';
 
 @Global()
 @Module({
@@ -27,9 +34,15 @@ import { UserModule } from './user/user.modules';
     }),
     DalModule,
     UserModule,
+    TheaterModule,
+    ScreenModule,
+    MovieModule,
+    SlotModule,
+    SeatModule,
+    ReservationModule,
   ],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, JwtStrategy, RolesGuard],
+  exports: [AuthService, RolesGuard],
   controllers: [AuthController],
 })
 export class MainModules {}

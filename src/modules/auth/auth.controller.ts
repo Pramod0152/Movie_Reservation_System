@@ -16,6 +16,7 @@ import { ResponseHandlerService } from '../../common/response/response-handler.s
 import { LoginDto } from '../../dto/user/login.dto';
 import { GenericResponseDto } from '../../dto/generic-response.dto';
 import { ReadUserDto } from '../../dto/user/read-user.dto';
+import { CreateTheaterDto } from '../../dto/theater/create-theater.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -65,6 +66,46 @@ export class AuthController {
   @ApiGenericResponse({ type: () => ReadUserDto })
   async register(@Body() createUserDto: CreateUserDto) {
     const result = await this.authService.registerUser(createUserDto);
+    return this.responseHandler.handleResponse(result);
+  }
+
+  @Post('login/theater')
+  @Public()
+  @ApiNotFoundResponse({
+    type: GenericResponseDto,
+    description: 'Record Not Found!.',
+  })
+  @ApiBadRequestResponse({
+    type: GenericResponseDto,
+    description: 'Form Validation Error!. ',
+  })
+  @ApiUnauthorizedResponse({
+    type: GenericResponseDto,
+    description: 'Unauthorized!. ',
+  })
+  @ApiGenericResponse({ type: () => ReadUserDto })
+  async loginTheater(@Body() body: LoginDto) {
+    const result = await this.authService.loginTheater(body);
+    return this.responseHandler.handleResponse(result);
+  }
+
+  @Post('register/theater')
+  @Public()
+  @ApiNotFoundResponse({
+    type: GenericResponseDto,
+    description: 'Record Not Found!.',
+  })
+  @ApiBadRequestResponse({
+    type: GenericResponseDto,
+    description: 'Form Validation Error!. ',
+  })
+  @ApiUnauthorizedResponse({
+    type: GenericResponseDto,
+    description: 'Unauthorized!. ',
+  })
+  @ApiGenericResponse({ type: () => ReadUserDto })
+  async registerTheater(@Body() createTheaterDto: CreateTheaterDto) {
+    const result = await this.authService.registerTheater(createTheaterDto);
     return this.responseHandler.handleResponse(result);
   }
 }

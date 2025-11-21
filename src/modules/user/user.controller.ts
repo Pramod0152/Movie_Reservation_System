@@ -1,6 +1,7 @@
 import { ResponseHandlerService } from './../../common/response/response-handler.service';
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { RolesGuard } from '../auth/guard/roles.guard';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -13,12 +14,15 @@ import { ReadUserDto } from '../../dto/user/read-user.dto';
 import { GenericResponseDto } from '../../dto/generic-response.dto';
 import { ApiGenericResponse } from '../../app/decorator/generic-response.decorator';
 import { UserService } from '../../bll/user.service';
+import { Roles } from '../../app/decorator/roles.decorator';
+import { Public } from '../../app/decorator/is-public.decorator';
 
 @ApiTags('Users')
 @Controller('users')
 @ApiBearerAuth()
 @ApiExtraModels(ReadUserDto, GenericResponseDto)
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -38,6 +42,7 @@ export class UserController {
     type: GenericResponseDto,
     description: 'Unauthorized!. ',
   })
+  @Public()
   @ApiGenericResponse({ type: () => ReadUserDto })
   async getUsers() {
     const users = await this.userService.getUsers();

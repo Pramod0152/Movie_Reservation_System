@@ -11,6 +11,12 @@ export class Theater extends Model {
   id: number;
 
   @Column
+  email: string;
+
+  @Column
+  password: string;
+
+  @Column
   name: string;
 
   @Column
