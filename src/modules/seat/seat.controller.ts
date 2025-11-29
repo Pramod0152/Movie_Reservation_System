@@ -8,6 +8,8 @@ import {
   Patch,
   Post,
   UseGuards,
+  Request,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -28,9 +30,10 @@ import { Roles } from '../../app/decorator/roles.decorator';
 import { CreateSeatLayoutDto } from '../../dto/seat/create-seat-layout.dto';
 import { UpdateSeatDto } from '../../dto/seat/update-seat.dto';
 import { Public } from '../../app/decorator/is-public.decorator';
+import { FilterSeatDto } from '../../dto/seat/filter-seat.dto';
 
 @ApiTags('Seats')
-@Controller('theaters/:theaterId/screens/:screenId/seats')
+@Controller('seats')
 @ApiBearerAuth()
 @ApiExtraModels(ReadSeatDto, GenericResponseDto)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -41,7 +44,7 @@ export class SeatController {
     private readonly responseHandler: ResponseHandlerService,
   ) {}
 
-  @Post()
+  @Post('/')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -55,16 +58,12 @@ export class SeatController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadSeatDto, isArray: true })
-  async createSeatLayout(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-    @Body() payload: CreateSeatLayoutDto,
-  ) {
-    const seats = await this.seatService.createSeatLayout(theaterId, screenId, payload);
+  async createSeatLayout(@Body() body: CreateSeatLayoutDto, @Request() req: any) {
+    const seats = await this.seatService.createSeatLayout(req.user.id, body.screen_id, body);
     return this.responseHandler.handleResponse(seats, 'Seat layout created successfully');
   }
 
-  @Get()
+  @Get('/')
   @Public()
   @ApiNotFoundResponse({
     type: GenericResponseDto,
@@ -79,16 +78,12 @@ export class SeatController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadSeatDto, isArray: true })
-  async getSeatLayout(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-  ) {
-    const seats = await this.seatService.getSeatLayout(theaterId, screenId);
+  async getSeatLayout(@Query() query: FilterSeatDto) {
+    const seats = await this.seatService.getSeatLayout(query.screen_id);
     return this.responseHandler.handleResponse(seats);
   }
 
-  @Get('/:seatId')
-  @Public()
+  @Get('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -102,16 +97,12 @@ export class SeatController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadSeatDto })
-  async getSeat(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-    @Param('seatId', ParseIntPipe) seatId: number,
-  ) {
-    const seat = await this.seatService.getSeat(theaterId, screenId, seatId);
+  async getSeat(@Param('id', ParseIntPipe) id: number, @Query() query: FilterSeatDto) {
+    const seat = await this.seatService.getSeat(query.screen_id, id);
     return this.responseHandler.handleResponse(seat);
   }
 
-  @Patch('/:seatId')
+  @Patch('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -126,16 +117,16 @@ export class SeatController {
   })
   @ApiGenericResponse({ type: () => ReadSeatDto })
   async updateSeat(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-    @Param('seatId', ParseIntPipe) seatId: number,
+    @Request() req: any,
+    @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateSeatDto,
+    @Query() query: FilterSeatDto,
   ) {
-    const seat = await this.seatService.updateSeat(theaterId, screenId, seatId, payload);
+    const seat = await this.seatService.updateSeat(req.user.id, query.screen_id, id, payload);
     return this.responseHandler.handleResponse(seat, 'Seat updated successfully');
   }
 
-  @Delete('/:seatId')
+  @Delete('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -150,11 +141,11 @@ export class SeatController {
   })
   @ApiGenericResponse({ type: () => ReadSeatDto })
   async deleteSeat(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-    @Param('seatId', ParseIntPipe) seatId: number,
+    @Request() req: any,
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: FilterSeatDto,
   ) {
-    const seat = await this.seatService.deleteSeat(theaterId, screenId, seatId);
+    const seat = await this.seatService.deleteSeat(req.user.id, query.screen_id, id);
     return this.responseHandler.handleResponse(seat, 'Seat deleted successfully');
   }
 }

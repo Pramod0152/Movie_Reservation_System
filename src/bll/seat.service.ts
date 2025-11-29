@@ -19,6 +19,7 @@ export class SeatService extends BaseService {
   }
 
   private async ensureScreenBelongsToTheater(theaterId: number, screenId: number) {
+    console.log('Ensuring screen belongs to theater:', theaterId, screenId);
     const screen = await this.screenDataService.findByIdAndTheater(screenId, theaterId);
     if (!screen) {
       throw new NotFoundException('Screen not found');
@@ -35,6 +36,7 @@ export class SeatService extends BaseService {
   }
 
   async createSeatLayout(theaterId: number, screenId: number, payload: CreateSeatLayoutDto) {
+    console.log('theaterId:', theaterId, 'screenId:', screenId, 'payload:', payload);
     await this.ensureScreenBelongsToTheater(theaterId, screenId);
 
     if (!payload?.seats || payload.seats.length === 0) {
@@ -50,24 +52,26 @@ export class SeatService extends BaseService {
     return this.mapper.mapArray(created, Seat, ReadSeatDto);
   }
 
-  async getSeatLayout(theaterId: number, screenId: number) {
-    await this.ensureScreenBelongsToTheater(theaterId, screenId);
+  async getSeatLayout(screenId: number) {
+    const screen = await this.screenDataService.findById(screenId);
+    if (!screen) {
+      throw new NotFoundException('Screen not found');
+    }
     const seats = await this.seatDataService.findAllByScreen(screenId);
     return this.mapper.mapArray(seats, Seat, ReadSeatDto);
   }
 
-  async getSeat(theaterId: number, screenId: number, seatId: number) {
-    await this.ensureScreenBelongsToTheater(theaterId, screenId);
+  async getSeat(screenId: number, seatId: number) {
+    const screen = await this.screenDataService.findById(screenId);
+    if (!screen) {
+      throw new NotFoundException('Screen not found');
+    }
+
     const seat = await this.ensureSeatExists(seatId, screenId);
     return this.mapper.map(seat, Seat, ReadSeatDto);
   }
 
-  async updateSeat(
-    theaterId: number,
-    screenId: number,
-    seatId: number,
-    payload: UpdateSeatDto,
-  ) {
+  async updateSeat(theaterId: number, screenId: number, seatId: number, payload: UpdateSeatDto) {
     await this.ensureScreenBelongsToTheater(theaterId, screenId);
     if (!payload || Object.values(payload).every((value) => value === undefined)) {
       throw new BadRequestException('No updates provided');
