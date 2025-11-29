@@ -7,6 +7,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -28,9 +30,10 @@ import { Roles } from '../../app/decorator/roles.decorator';
 import { CreateScreenDto } from '../../dto/screen/create-screen.dto';
 import { UpdateScreenDto } from '../../dto/screen/update-screen.dto';
 import { Public } from '../../app/decorator/is-public.decorator';
+import { FilterScreenDto } from '../../dto/screen/filter-screen.dto';
 
 @ApiTags('Screens')
-@Controller('theaters/:theaterId/screens')
+@Controller('screens')
 @ApiBearerAuth()
 @ApiExtraModels(ReadScreenDto, GenericResponseDto)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -55,11 +58,8 @@ export class ScreenController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadScreenDto })
-  async createScreen(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Body() payload: CreateScreenDto,
-  ) {
-    const screen = await this.screenService.createScreen(theaterId, payload);
+  async createScreen(@Request() req: any, @Body() payload: CreateScreenDto) {
+    const screen = await this.screenService.createScreen(req.user.id, payload);
     return this.responseHandler.handleResponse(screen, 'Screen created successfully');
   }
 
@@ -78,8 +78,8 @@ export class ScreenController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadScreenDto, isArray: true })
-  async getScreens(@Param('theaterId', ParseIntPipe) theaterId: number) {
-    const screens = await this.screenService.getScreens(theaterId);
+  async getScreens(@Query() query: FilterScreenDto) {
+    const screens = await this.screenService.getScreens(query.theater_id);
     return this.responseHandler.handleResponse(screens);
   }
 
@@ -99,10 +99,10 @@ export class ScreenController {
   })
   @ApiGenericResponse({ type: () => ReadScreenDto })
   async getScreen(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
     @Param('screenId', ParseIntPipe) screenId: number,
+    @Query() query: FilterScreenDto,
   ) {
-    const screen = await this.screenService.getScreen(theaterId, screenId);
+    const screen = await this.screenService.getScreen(query.theater_id, screenId);
     return this.responseHandler.handleResponse(screen);
   }
 
@@ -121,11 +121,11 @@ export class ScreenController {
   })
   @ApiGenericResponse({ type: () => ReadScreenDto })
   async updateScreen(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
+    @Request() req: any,
     @Param('screenId', ParseIntPipe) screenId: number,
     @Body() payload: UpdateScreenDto,
   ) {
-    const screen = await this.screenService.updateScreen(theaterId, screenId, payload);
+    const screen = await this.screenService.updateScreen(req.user.id, screenId, payload);
     return this.responseHandler.handleResponse(screen, 'Screen updated successfully');
   }
 
@@ -144,10 +144,10 @@ export class ScreenController {
   })
   @ApiGenericResponse({ type: () => ReadScreenDto })
   async deleteScreen(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
+    @Request() req: any,
     @Param('screenId', ParseIntPipe) screenId: number,
   ) {
-    const screen = await this.screenService.deleteScreen(theaterId, screenId);
+    const screen = await this.screenService.deleteScreen(req.user.id, screenId);
     return this.responseHandler.handleResponse(screen, 'Screen deleted successfully');
   }
 }

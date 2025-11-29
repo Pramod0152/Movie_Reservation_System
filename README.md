@@ -54,11 +54,11 @@ Each response is wrapped by `GenericResponseDto`, returning `{ message, data, me
 ### 🖥️ Screens (per theater)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/theaters/:theaterId/screens` | Theater | Create screen |
-| GET | `/theaters/:theaterId/screens` | Public | List screens |
-| GET | `/theaters/:theaterId/screens/:screenId` | Public | Screen detail |
-| PATCH | `/theaters/:theaterId/screens/:screenId` | Theater | Update screen |
-| DELETE | `/theaters/:theaterId/screens/:screenId` | Theater | Remove screen |
+| POST | `/screens` | Theater | Create screen |
+| GET | `/screens` | Public | List screens (`theater_id` query required) |
+| GET | `/screens/:screenId` | Public | Screen detail (`theater_id` query required) |
+| PATCH | `/screens/:screenId` | Theater | Update screen |
+| DELETE | `/screens/:screenId` | Theater | Remove screen |
 
 ### 🎬 Movies
 | Method | Endpoint | Access | Description |
