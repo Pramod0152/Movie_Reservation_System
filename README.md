@@ -81,11 +81,11 @@ Each response is wrapped by `GenericResponseDto`, returning `{ message, data, me
 ### 💺 Seats (layouts)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/theaters/:theaterId/screens/:screenId/seats` | Theater | Bulk create layout |
-| GET | `/theaters/:theaterId/screens/:screenId/seats` | Public | Fetch layout |
-| GET | `/theaters/:theaterId/screens/:screenId/seats/:seatId` | Public | Seat detail |
-| PATCH | `/theaters/:theaterId/screens/:screenId/seats/:seatId` | Theater | Update seat |
-| DELETE | `/theaters/:theaterId/screens/:screenId/seats/:seatId` | Theater | Remove seat |
+| POST | `/seats` | Theater | Bulk create layout (`screen_id` in body) |
+| GET | `/seats` | Public | Fetch layout (`screen_id` query required) |
+| GET | `/seats/:seatId` | Public | Seat detail (`screen_id` query required) |
+| PATCH | `/seats/:seatId` | Theater | Update seat (`screen_id` query required) |
+| DELETE | `/seats/:seatId` | Theater | Remove seat (`screen_id` query required) |
 
 ### 🧾 Reservations (users)
 | Method | Endpoint | Access | Description |
