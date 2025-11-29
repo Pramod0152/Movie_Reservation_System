@@ -28,6 +28,14 @@ export class SlotService extends BaseService {
     return screen;
   }
 
+  private async ensureScreenExists(screenId: number) {
+    const screen = await this.screenDataService.findById(screenId);
+    if (!screen) {
+      throw new NotFoundException('Screen not found');
+    }
+    return screen;
+  }
+
   private async ensureMovieExists(movieId: number) {
     const movie = await this.movieDataService.findById(movieId);
     if (!movie) {
@@ -44,21 +52,21 @@ export class SlotService extends BaseService {
     return slot;
   }
 
-  async createSlot(theaterId: number, screenId: number, payload: CreateSlotDto) {
-    await this.ensureScreenBelongsToTheater(theaterId, screenId);
+  async createSlot(theaterId: number, payload: CreateSlotDto) {
+    await this.ensureScreenBelongsToTheater(theaterId, payload.screen_id);
     await this.ensureMovieExists(payload.movie_id);
-    const slot = await this.slotDataService.createSlot(screenId, payload);
+    const slot = await this.slotDataService.createSlot(payload.screen_id, payload);
     return this.mapper.map(slot, Slot, ReadSlotDto);
   }
 
-  async getSlots(theaterId: number, screenId: number) {
-    await this.ensureScreenBelongsToTheater(theaterId, screenId);
+  async getSlots(screenId: number) {
+    await this.ensureScreenExists(screenId);
     const slots = await this.slotDataService.findAllByScreen(screenId);
     return this.mapper.mapArray(slots, Slot, ReadSlotDto);
   }
 
-  async getSlot(theaterId: number, screenId: number, slotId: number) {
-    await this.ensureScreenBelongsToTheater(theaterId, screenId);
+  async getSlot(screenId: number, slotId: number) {
+    await this.ensureScreenExists(screenId);
     const slot = await this.ensureSlotExists(slotId, screenId);
     return this.mapper.map(slot, Slot, ReadSlotDto);
   }

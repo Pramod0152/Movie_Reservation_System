@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSlotDto {
   @ApiProperty()
+  screen_id: number;
+
+  @ApiProperty()
   movie_id: number;
 
   @ApiProperty()

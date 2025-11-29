@@ -7,6 +7,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -28,9 +30,10 @@ import { Roles } from '../../app/decorator/roles.decorator';
 import { CreateSlotDto } from '../../dto/slot/create-slot.dto';
 import { UpdateSlotDto } from '../../dto/slot/update-slot.dto';
 import { Public } from '../../app/decorator/is-public.decorator';
+import { FilterSeatDto } from '../../dto/seat/filter-seat.dto';
 
 @ApiTags('Slots')
-@Controller('theaters/:theaterId/screens/:screenId/slots')
+@Controller('slots')
 @ApiBearerAuth()
 @ApiExtraModels(ReadSlotDto, GenericResponseDto)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -55,12 +58,8 @@ export class SlotController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadSlotDto })
-  async createSlot(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-    @Body() payload: CreateSlotDto,
-  ) {
-    const slot = await this.slotService.createSlot(theaterId, screenId, payload);
+  async createSlot(@Request() req: any, @Body() payload: CreateSlotDto) {
+    const slot = await this.slotService.createSlot(req.user.id, payload);
     return this.responseHandler.handleResponse(slot, 'Slot created successfully');
   }
 
@@ -79,11 +78,8 @@ export class SlotController {
     description: 'Unauthorized!. ',
   })
   @ApiGenericResponse({ type: () => ReadSlotDto, isArray: true })
-  async getSlots(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
-  ) {
-    const slots = await this.slotService.getSlots(theaterId, screenId);
+  async getSlots(@Query() query: FilterSeatDto) {
+    const slots = await this.slotService.getSlots(query.screen_id);
     return this.responseHandler.handleResponse(slots);
   }
 
@@ -103,11 +99,10 @@ export class SlotController {
   })
   @ApiGenericResponse({ type: () => ReadSlotDto })
   async getSlot(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
     @Param('slotId', ParseIntPipe) slotId: number,
+    @Query() query: FilterSeatDto,
   ) {
-    const slot = await this.slotService.getSlot(theaterId, screenId, slotId);
+    const slot = await this.slotService.getSlot(query.screen_id, slotId);
     return this.responseHandler.handleResponse(slot);
   }
 
@@ -126,12 +121,12 @@ export class SlotController {
   })
   @ApiGenericResponse({ type: () => ReadSlotDto })
   async updateSlot(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
+    @Request() req: any,
     @Param('slotId', ParseIntPipe) slotId: number,
     @Body() payload: UpdateSlotDto,
+    @Query() query: FilterSeatDto,
   ) {
-    const slot = await this.slotService.updateSlot(theaterId, screenId, slotId, payload);
+    const slot = await this.slotService.updateSlot(req.user.id, query.screen_id, slotId, payload);
     return this.responseHandler.handleResponse(slot, 'Slot updated successfully');
   }
 
@@ -150,11 +145,11 @@ export class SlotController {
   })
   @ApiGenericResponse({ type: () => ReadSlotDto })
   async deleteSlot(
-    @Param('theaterId', ParseIntPipe) theaterId: number,
-    @Param('screenId', ParseIntPipe) screenId: number,
+    @Request() req: any,
     @Param('slotId', ParseIntPipe) slotId: number,
+    @Query() query: FilterSeatDto,
   ) {
-    const slot = await this.slotService.deleteSlot(theaterId, screenId, slotId);
+    const slot = await this.slotService.deleteSlot(req.user.id, query.screen_id, slotId);
     return this.responseHandler.handleResponse(slot, 'Slot deleted successfully');
   }
 }

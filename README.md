@@ -72,11 +72,11 @@ Each response is wrapped by `GenericResponseDto`, returning `{ message, data, me
 ### 🕒 Slots (showtimes)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/theaters/:theaterId/screens/:screenId/slots` | Theater | Schedule slot |
-| GET | `/theaters/:theaterId/screens/:screenId/slots` | Public | List slots |
-| GET | `/theaters/:theaterId/screens/:screenId/slots/:slotId` | Public | Slot detail |
-| PATCH | `/theaters/:theaterId/screens/:screenId/slots/:slotId` | Theater | Update slot |
-| DELETE | `/theaters/:theaterId/screens/:screenId/slots/:slotId` | Theater | Cancel slot |
+| POST | `/slots` | Theater | Schedule slot |
+| GET | `/slots` | Public | List slots (`screen_id` query required) |
+| GET | `/slots/:slotId` | Public | Slot detail (`screen_id` query required) |
+| PATCH | `/slots/:slotId` | Theater | Update slot (`screen_id` query required) |
+| DELETE | `/slots/:slotId` | Theater | Cancel slot (`screen_id` query required) |
 
 ### 💺 Seats (layouts)
 | Method | Endpoint | Access | Description |
