@@ -9,6 +9,13 @@ async function bootstrap() {
     rawBody: true,
   });
 
+  const globalPrefix = 'api/v1';
+  const swaggerPath = 'api/docs';
+
+  app.setGlobalPrefix(globalPrefix);
+
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('Movie Reservation System API')
     .setDescription('The movie reservation API description')
@@ -19,14 +26,13 @@ async function bootstrap() {
     extraModels: [],
     deepScanRoutes: true,
   });
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(swaggerPath, app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
-
-  app.enableCors();
+  const port = Number(process.env.PORT ?? 3000);
+  await app.listen(port);
 
   const logger: LoggerService = app.get<LoggerService>(LoggerService);
-  logger.info('`Swagger is available at http://localhost:' + (process.env.PORT ?? 3000) + '/api`');
+  logger.info('Swagger is available at http://localhost:' + port + '/' + swaggerPath);
 
   logger.info(
     `🚀 🚀 🚀 Application is running on: ${await app.getUrl()} 🚀 🚀 🚀`,

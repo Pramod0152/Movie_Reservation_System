@@ -83,7 +83,7 @@ export class SlotController {
     return this.responseHandler.handleResponse(slots);
   }
 
-  @Get('/:slotId')
+  @Get('/:id')
   @Public()
   @ApiNotFoundResponse({
     type: GenericResponseDto,
@@ -99,14 +99,14 @@ export class SlotController {
   })
   @ApiGenericResponse({ type: () => ReadSlotDto })
   async getSlot(
-    @Param('slotId', ParseIntPipe) slotId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Query() query: FilterSeatDto,
   ) {
-    const slot = await this.slotService.getSlot(query.screen_id, slotId);
+    const slot = await this.slotService.getSlot(query.screen_id, id);
     return this.responseHandler.handleResponse(slot);
   }
 
-  @Patch('/:slotId')
+  @Patch('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -122,15 +122,15 @@ export class SlotController {
   @ApiGenericResponse({ type: () => ReadSlotDto })
   async updateSlot(
     @Request() req: any,
-    @Param('slotId', ParseIntPipe) slotId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateSlotDto,
     @Query() query: FilterSeatDto,
   ) {
-    const slot = await this.slotService.updateSlot(req.user.id, query.screen_id, slotId, payload);
+    const slot = await this.slotService.updateSlot(req.user.id, query.screen_id, id, payload);
     return this.responseHandler.handleResponse(slot, 'Slot updated successfully');
   }
 
-  @Delete('/:slotId')
+  @Delete('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -146,10 +146,10 @@ export class SlotController {
   @ApiGenericResponse({ type: () => ReadSlotDto })
   async deleteSlot(
     @Request() req: any,
-    @Param('slotId', ParseIntPipe) slotId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Query() query: FilterSeatDto,
   ) {
-    const slot = await this.slotService.deleteSlot(req.user.id, query.screen_id, slotId);
+    const slot = await this.slotService.deleteSlot(req.user.id, query.screen_id, id);
     return this.responseHandler.handleResponse(slot, 'Slot deleted successfully');
   }
 }

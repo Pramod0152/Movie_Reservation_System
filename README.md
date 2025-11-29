@@ -36,71 +36,71 @@ Each response is wrapped by `GenericResponseDto`, returning `{ message, data, me
 ### 👥 Auth & Users
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/auth/register` | Public | Create user account |
-| POST | `/auth/login` | Public | Login user account |
-| POST | `/auth/register/theater` | Public | Register theater admin |
-| POST | `/auth/login/theater` | Public | Login theater admin |
-| GET | `/users/` | Public | List users |
-| GET | `/users/profile` | User | Fetch current user profile |
+| POST | `/api/v1/auth/register` | Public | Create user account |
+| POST | `/api/v1/auth/login` | Public | Login user account |
+| POST | `/api/v1/auth/register/theater` | Public | Register theater admin |
+| POST | `/api/v1/auth/login/theater` | Public | Login theater admin |
+| GET | `/api/v1/users` | Public | List users |
+| GET | `/api/v1/users/profile` | User | Fetch current user profile |
 
 ### 🎭 Theaters
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/theaters` | Public | List theaters |
-| GET | `/theaters/:id` | Public | Theater detail |
-| PATCH | `/theaters/:id` | Theater | Update profile |
-| DELETE | `/theaters/:id` | Theater | Delete theater |
+| GET | `/api/v1/theaters` | Public | List theaters |
+| GET | `/api/v1/theaters/:id` | Public | Theater detail |
+| PATCH | `/api/v1/theaters/:id` | Theater | Update profile |
+| DELETE | `/api/v1/theaters/:id` | Theater | Delete theater |
 
 ### 🖥️ Screens (per theater)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/screens` | Theater | Create screen |
-| GET | `/screens` | Public | List screens (`theater_id` query required) |
-| GET | `/screens/:screenId` | Public | Screen detail (`theater_id` query required) |
-| PATCH | `/screens/:screenId` | Theater | Update screen |
-| DELETE | `/screens/:screenId` | Theater | Remove screen |
+| POST | `/api/v1/screens` | Theater | Create screen |
+| GET | `/api/v1/screens` | Public | List screens (`theater_id` query required) |
+| GET | `/api/v1/screens/:screenId` | Public | Screen detail (`theater_id` query required) |
+| PATCH | `/api/v1/screens/:screenId` | Theater | Update screen |
+| DELETE | `/api/v1/screens/:screenId` | Theater | Remove screen |
 
 ### 🎬 Movies
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/movies` | Theater | Create movie |
-| GET | `/movies` | Public | Browse movies |
-| GET | `/movies/:id` | Public | Movie detail |
-| PATCH | `/movies/:id` | Theater | Update movie |
-| DELETE | `/movies/:id` | Theater | Remove movie |
+| POST | `/api/v1/movies` | Theater | Create movie |
+| GET | `/api/v1/movies` | Public | Browse movies |
+| GET | `/api/v1/movies/:id` | Public | Movie detail |
+| PATCH | `/api/v1/movies/:id` | Theater | Update movie |
+| DELETE | `/api/v1/movies/:id` | Theater | Remove movie |
 
 ### 🕒 Slots (showtimes)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/slots` | Theater | Schedule slot |
-| GET | `/slots` | Public | List slots (`screen_id` query required) |
-| GET | `/slots/:slotId` | Public | Slot detail (`screen_id` query required) |
-| PATCH | `/slots/:slotId` | Theater | Update slot (`screen_id` query required) |
-| DELETE | `/slots/:slotId` | Theater | Cancel slot (`screen_id` query required) |
+| POST | `/api/v1/slots` | Theater | Schedule slot |
+| GET | `/api/v1/slots` | Public | List slots (`screen_id` query required) |
+| GET | `/api/v1/slots/:slotId` | Public | Slot detail (`screen_id` query required) |
+| PATCH | `/api/v1/slots/:slotId` | Theater | Update slot (`screen_id` query required) |
+| DELETE | `/api/v1/slots/:slotId` | Theater | Cancel slot (`screen_id` query required) |
 
 ### 💺 Seats (layouts)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/seats` | Theater | Bulk create layout (`screen_id` in body) |
-| GET | `/seats` | Public | Fetch layout (`screen_id` query required) |
-| GET | `/seats/:seatId` | Public | Seat detail (`screen_id` query required) |
-| PATCH | `/seats/:seatId` | Theater | Update seat (`screen_id` query required) |
-| DELETE | `/seats/:seatId` | Theater | Remove seat (`screen_id` query required) |
+| POST | `/api/v1/seats` | Theater | Bulk create layout (`screen_id` in body) |
+| GET | `/api/v1/seats` | Public | Fetch layout (`screen_id` query required) |
+| GET | `/api/v1/seats/:seatId` | Public | Seat detail (`screen_id` query required) |
+| PATCH | `/api/v1/seats/:seatId` | Theater | Update seat (`screen_id` query required) |
+| DELETE | `/api/v1/seats/:seatId` | Theater | Remove seat (`screen_id` query required) |
 
 ### 🧾 Reservations (users)
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/reservations` | User | Book seats (transactional) |
-| GET | `/reservations/me` | User | My reservations |
-| GET | `/reservations/:id` | User | Reservation detail |
-| DELETE | `/reservations/:id` | User | Cancel before show starts |
+| POST | `/api/v1/reservations` | User | Book seats (transactional) |
+| GET | `/api/v1/reservations/me` | User | My reservations |
+| GET | `/api/v1/reservations/:id` | User | Reservation detail |
+| DELETE | `/api/v1/reservations/:id` | User | Cancel before show starts |
 
 ### 📊 Availability & Discovery
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/slots/:slotId/available-seats` | Public | Split lists available vs reserved seats |
-| GET | `/movies/:movieId/showtimes` | Public | Theaters & slots playing movie |
-| GET | `/theaters/:theaterId/movies` | Public | Movies and slots in theater |
+| GET | `/api/v1/slots/:slotId/available-seats` | Public | Split lists available vs reserved seats |
+| GET | `/api/v1/movies/:movieId/showtimes` | Public | Theaters & slots playing movie |
+| GET | `/api/v1/theaters/:theaterId/movies` | Public | Movies and slots in theater |
 
 ---
 

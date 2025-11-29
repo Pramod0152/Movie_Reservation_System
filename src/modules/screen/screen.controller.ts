@@ -83,7 +83,7 @@ export class ScreenController {
     return this.responseHandler.handleResponse(screens);
   }
 
-  @Get('/:screenId')
+  @Get('/:id')
   @Public()
   @ApiNotFoundResponse({
     type: GenericResponseDto,
@@ -99,14 +99,14 @@ export class ScreenController {
   })
   @ApiGenericResponse({ type: () => ReadScreenDto })
   async getScreen(
-    @Param('screenId', ParseIntPipe) screenId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Query() query: FilterScreenDto,
   ) {
-    const screen = await this.screenService.getScreen(query.theater_id, screenId);
+    const screen = await this.screenService.getScreen(query.theater_id, id);
     return this.responseHandler.handleResponse(screen);
   }
 
-  @Patch('/:screenId')
+  @Patch('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -122,14 +122,14 @@ export class ScreenController {
   @ApiGenericResponse({ type: () => ReadScreenDto })
   async updateScreen(
     @Request() req: any,
-    @Param('screenId', ParseIntPipe) screenId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateScreenDto,
   ) {
-    const screen = await this.screenService.updateScreen(req.user.id, screenId, payload);
+    const screen = await this.screenService.updateScreen(req.user.id, id, payload);
     return this.responseHandler.handleResponse(screen, 'Screen updated successfully');
   }
 
-  @Delete('/:screenId')
+  @Delete('/:id')
   @ApiNotFoundResponse({
     type: GenericResponseDto,
     description: 'Record Not Found!.',
@@ -145,9 +145,9 @@ export class ScreenController {
   @ApiGenericResponse({ type: () => ReadScreenDto })
   async deleteScreen(
     @Request() req: any,
-    @Param('screenId', ParseIntPipe) screenId: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
-    const screen = await this.screenService.deleteScreen(req.user.id, screenId);
+    const screen = await this.screenService.deleteScreen(req.user.id, id);
     return this.responseHandler.handleResponse(screen, 'Screen deleted successfully');
   }
 }
